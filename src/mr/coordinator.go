@@ -83,9 +83,6 @@ func (c *Coordinator) GetTask(args *EmptyArgs, reply *Task) error {
 				continue
 			case <-c.reduceTaskAvailable:
 				continue
-			case <-c.jobDone:
-				reply.TaskType = EXIT
-				return nil
 			}
 		}
 
