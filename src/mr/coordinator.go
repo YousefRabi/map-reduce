@@ -148,15 +148,13 @@ func (c *Coordinator) server() {
 // main/mrcoordinator.go calls Done() periodically to find out
 // if the entire job has finished.
 func (c *Coordinator) Done() bool {
-	ret := false
-
-	// Your code here.
-
-	ret = len(c.mapPending) == 0 &&
+	c.mu.Lock()
+	ret := len(c.mapPending) == 0 &&
 		len(c.mapInProgress) == 0 &&
 		len(c.reducePending) == 0 &&
 		len(c.reduceInProgress) == 0 &&
 		len(c.reduceCompleted) == c.nReduce
+	c.mu.Unlock()
 
 	return ret
 }
@@ -167,7 +165,6 @@ func (c *Coordinator) Done() bool {
 func MakeCoordinator(files []string, nReduce int) *Coordinator {
 	c := Coordinator{}
 
-	// Your code here.
 	c.mapPending = make(map[int]string)
 	c.mapInProgress = make(map[int]string)
 	c.reducePending = make(map[int]bool)
